@@ -8,3 +8,7 @@ export const TOGGLE_COLOR_FILTER = color => ({
 	type: "filters/colorFilterToggled",
 	payload: color,
 });
+
+export const CLEAR_FILTERS = () => ({
+	type: "filters/clearFilters",
+});

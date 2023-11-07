@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from 'uuid';
 
 // A todo has the following properties
 // -- whether it is completed
@@ -10,30 +10,31 @@ import { v4 as uuid } from "uuid";
 
 const initialState = {
 	[uuid()]: {
-		text: "Learn React",
+		text: 'Learn React',
 		complete: true,
-		color: "red",
+		color: 'red',
 	},
 	[uuid()]: {
-		text: "Learn Redux",
+		text: 'Learn Redux',
 		complete: false,
 	},
 };
 
 export default function todosReducer(state = initialState, action) {
 	switch (action.type) {
-		case "todos/todoAdded": {
-			const { text } = action.payload;
+		case 'todos/todoAdded': {
+			const text = action.payload;
+			const id = uuid();
 			const newTodo = {
 				text,
 				complete: false,
 			};
 			return {
 				...state,
-				[newTodo.id]: newTodo,
+				[id]: newTodo,
 			};
 		}
-		case "todos/todoToggled": {
+		case 'todos/todoToggled': {
 			const id = action.payload;
 			if (state[id]) {
 				return {
@@ -47,7 +48,7 @@ export default function todosReducer(state = initialState, action) {
 				return state;
 			}
 		}
-		case "todos/colorUpdated": {
+		case 'todos/colorUpdated': {
 			const { color, id } = action.payload;
 			if (state[id]) {
 				return {
@@ -59,25 +60,26 @@ export default function todosReducer(state = initialState, action) {
 				};
 			} else return state;
 		}
-		case "todos/todoDeleted": {
+		case 'todos/todoDeleted': {
 			const newState = { ...state };
 			delete newState[action.payload];
 			return newState;
 		}
-		case "todos/allCompleted": {
+		case 'todos/allCompleted': {
 			const newState = { ...state };
-			Object.values(newState).forEach(todo => {
+			Object.values(newState).forEach((todo) => {
 				todo.complete = true;
 			});
 			return newState;
 		}
-		case "todos/completedCleared": {
+		case 'todos/completedCleared': {
 			const newState = { ...state };
-			Object.values(newState).forEach(todo => {
-				if (todo.complete) {
-					delete newState[todo.id];
+			for (let id in newState) {
+				if (newState[id].complete) {
+					delete newState[id];
 				}
-			});
+			}
+
 			return newState;
 		}
 		default:

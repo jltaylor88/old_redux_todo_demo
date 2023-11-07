@@ -1,17 +1,30 @@
 import React from "react";
-import Banner from "./components/Banner";
+import { useDispatch } from "react-redux";
 import "./App.css";
+import Banner from "./components/Banner";
 import Card from "./components/Card";
+import { colorMap } from "./components/ColorSelect";
+import FilterByStatus from "./components/FilterByStatus";
+import TasksRemaining from "./components/TasksRemaining";
 import TodoInput from "./components/TodoInput";
 import TodoRow from "./components/TodoRow";
-import TodoCheckbox from "./components/TodoCheckbox";
-import { useSelector } from "react-redux";
-import { selectTodosAsArray } from "./redux/features/todos/todosSelectors";
-import ColorSelect from "./components/ColorSelect";
+import TodosList from "./components/TodosList";
+import {
+	CLEAR_ALL_COMPLETED,
+	MARK_ALL_COMPLETED,
+} from "./redux/features/todos/todosActions";
+import ColorInput from "./components/ColorInput";
+import ColorsInputs from "./components/ColorsInputs";
+import { CLEAR_FILTERS } from "./redux/features/filters/filtersActions";
 
 const App = () => {
-	const todoItems = useSelector(selectTodosAsArray);
-	console.log(todoItems);
+	const dispatch = useDispatch();
+	const handleMarkAllAsCompleted = () => {
+		dispatch(MARK_ALL_COMPLETED());
+	};
+	const handleClearCompleted = () => {
+		dispatch(CLEAR_ALL_COMPLETED());
+	};
 
 	return (
 		<div style={{ minHeight: "100vh", backgroundColor: "#F0F0F0" }}>
@@ -26,22 +39,62 @@ const App = () => {
 			>
 				<Card>
 					<TodoRow right={<TodoInput />} />
-					{todoItems.map(item => (
+					<TodosList />
+					<div style={{ display: "flex", padding: "20px" }}>
+						<div style={{ flex: 1, textAlign: "center" }}>
+							<h3>Actions</h3>
+							<button
+								style={{
+									backgroundColor: "blue",
+									color: "white",
+									padding: "5px",
+									border: "none",
+									outline: "none",
+									borderRadius: "5px",
+									marginBottom: "10px",
+								}}
+								onClick={handleMarkAllAsCompleted}
+							>
+								Mark all as completed
+							</button>
+							<button
+								style={{
+									backgroundColor: "blue",
+									color: "white",
+									padding: "5px",
+									border: "none",
+									outline: "none",
+									borderRadius: "5px",
+									marginBottom: "10px",
+								}}
+								onClick={handleClearCompleted}
+							>
+								Clear completed
+							</button>
+						</div>
 						<div
-							key={item.id}
-							style={{ width: "100%", display: "flex", alignItems: "center" }}
+							style={{
+								flex: 3,
+								display: "flex",
+								justifyContent: "space-evenly",
+							}}
 						>
-							<div style={{ flex: 1 }}>
-								<TodoRow
-									left={<TodoCheckbox id={item.id} />}
-									right={item.text}
-								/>
+							<div style={{ textAlign: "center" }}>
+								<h3>Remaining Todos</h3>
+								<TasksRemaining />
 							</div>
-							<div style={{ marginRight: "20px" }}>
-								<ColorSelect id={item.id} />
+							<div>
+								<h3>Filter By Status</h3>
+								<FilterByStatus value='all' label='All' />
+								<FilterByStatus value='active' label='Active' />
+								<FilterByStatus value='completed' label='Completed' />
+							</div>
+							<div>
+								<h3>Filter By Color</h3>
+								<ColorsInputs />
 							</div>
 						</div>
-					))}
+					</div>
 				</Card>
 			</div>
 		</div>
